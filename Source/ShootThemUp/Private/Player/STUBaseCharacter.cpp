@@ -4,10 +4,11 @@
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/STUCharacterMovementComponent.h"
 
 // Sets default values
-ASTUBaseCharacter::ASTUBaseCharacter()
+ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
+    : Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -16,8 +17,8 @@ ASTUBaseCharacter::ASTUBaseCharacter()
     SpringArmComponent->SetupAttachment(GetRootComponent());
     SpringArmComponent->bUsePawnControlRotation = true;
 
-    CharacterMovementComponent = GetCharacterMovement();
-    CharacterMovementComponent->MaxWalkSpeed;
+   /* CharacterMovementComponent = GetCharacterMovement();
+    CharacterMovementComponent->MaxWalkSpeed;*/
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
@@ -45,12 +46,13 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAxis("LookUp", this, &ASTUBaseCharacter::AddControllerPitchInput);
     PlayerInputComponent->BindAxis("TurnAround", this, &ASTUBaseCharacter::AddControllerYawInput);
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASTUBaseCharacter::Jump);
-    PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUBaseCharacter::RunStart);
-    PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUBaseCharacter::RunEnd);
+    PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ASTUBaseCharacter::OnStartRunning);
+    PlayerInputComponent->BindAction("Run", IE_Released, this, &ASTUBaseCharacter::OnStopRunning);
 }
 
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
+    IsMovingForward = Amount > 0.0f;
     AddMovementInput(GetActorForwardVector(), Amount);
 }
 
@@ -59,22 +61,30 @@ void ASTUBaseCharacter::MoveRight(float Amount)
     AddMovementInput(GetActorRightVector(), Amount);
 }
 
-void ASTUBaseCharacter::RunStart()
+void ASTUBaseCharacter::OnStartRunning()
 {
-    CharacterMovementComponent->MaxWalkSpeed += RunSpeed;
+    WantsToRun = true;
+    // CharacterMovementComponent->MaxWalkSpeed += RunSpeed;
 }
 
-void ASTUBaseCharacter::RunEnd() {
-    CharacterMovementComponent->MaxWalkSpeed -= RunSpeed;
+void ASTUBaseCharacter::OnStopRunning()
+{
+    WantsToRun = false;
+    // CharacterMovementComponent->MaxWalkSpeed -= RunSpeed;
 }
 
-/// Functions for moving Camera around using mouse input. 
-//void ASTUBaseCharacter::LookUp(float Amount)
+bool ASTUBaseCharacter::IsRunning() const
+{
+    return WantsToRun; //&& IsMovingForward && !GetVelocity().IsZero();
+}
+
+/// Functions for moving Camera around using mouse input.
+// void ASTUBaseCharacter::LookUp(float Amount)
 //{
 //    AddControllerPitchInput(Amount);
 //}
 //
-//void ASTUBaseCharacter::TurnAround(float Amount)
+// void ASTUBaseCharacter::TurnAround(float Amount)
 //{
 //    AddControllerYawInput(Amount);
 //}

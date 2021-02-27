@@ -8,7 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
-class UCharacterMovementComponent;
+
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -17,7 +17,7 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 
 public:
     // Sets default values for this character's properties
-    ASTUBaseCharacter();
+    ASTUBaseCharacter(const FObjectInitializer& ObjInit);
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -26,11 +26,8 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* CameraComponent;
 
-    UPROPERTY(VisibleAnywhere, Category = "Components")
-    UCharacterMovementComponent* CharacterMovementComponent;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-    float RunSpeed = 1000.0f;
+  /*  UPROPERTY(VisibleAnywhere, Category = "Components")
+    UCharacterMovementComponent* CharacterMovementComponent;*/
 
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -42,11 +39,19 @@ public:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    bool IsRunning() const;
+
 private:
+    bool WantsToRun = false;
+    bool IsMovingForward = false;
+
     void MoveForward(float Amount);
     void MoveRight(float Amount);
-    void RunStart();
-    void RunEnd();
+
+    void OnStartRunning();
+    void OnStopRunning();
+    
     // void LookUp(float Amount);
     // void TurnAround(float Amount);
 };
