@@ -17,8 +17,8 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
     SpringArmComponent->SetupAttachment(GetRootComponent());
     SpringArmComponent->bUsePawnControlRotation = true;
 
-   /* CharacterMovementComponent = GetCharacterMovement();
-    CharacterMovementComponent->MaxWalkSpeed;*/
+    /* CharacterMovementComponent = GetCharacterMovement();
+     CharacterMovementComponent->MaxWalkSpeed;*/
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
@@ -53,29 +53,42 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
     IsMovingForward = Amount > 0.0f;
+    if (Amount == 0.0f)
+        return;
     AddMovementInput(GetActorForwardVector(), Amount);
 }
 
 void ASTUBaseCharacter::MoveRight(float Amount)
 {
+    if (Amount == 0.0f)
+        return;
     AddMovementInput(GetActorRightVector(), Amount);
 }
 
 void ASTUBaseCharacter::OnStartRunning()
 {
     WantsToRun = true;
-    // CharacterMovementComponent->MaxWalkSpeed += RunSpeed;
 }
 
 void ASTUBaseCharacter::OnStopRunning()
 {
     WantsToRun = false;
-    // CharacterMovementComponent->MaxWalkSpeed -= RunSpeed;
 }
 
 bool ASTUBaseCharacter::IsRunning() const
 {
-    return WantsToRun; //&& IsMovingForward && !GetVelocity().IsZero();
+    return WantsToRun && IsMovingForward && !GetVelocity().IsZero();
+}
+
+float ASTUBaseCharacter::GetMovementDirection() const
+{
+    if (GetVelocity().IsZero())
+        return 0;
+    const auto VelocityNormal = GetVelocity().GetSafeNormal();
+    const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+    const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
+    const auto Degress = FMath::RadiansToDegrees(AngleBetween);
+    return CrossProduct.IsZero() ? Degress : Degress * FMath::Sign(CrossProduct.Z);
 }
 
 /// Functions for moving Camera around using mouse input.
