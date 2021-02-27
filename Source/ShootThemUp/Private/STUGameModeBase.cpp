@@ -1,15 +1,11 @@
 // Shoot Them Up game. All Rights Resived.
 
 #include "STUGameModeBase.h"
+#include "Player/STUBaseCharacter.h"
+#include "Player/STUPlayerController.h"
 
-void ASTUGameModeBase::BeginPlay()
+ASTUGameModeBase::ASTUGameModeBase()
 {
-    int32 Variable = 0;
-    if (Variable < 10)
-    {
-        for (int32 i = 0; i < 10; ++i)
-        {
-            UE_LOG(LogTemp, Display, TEXT("index: %i"), i);
-        }
-    }
+    DefaultPawnClass = ASTUBaseCharacter::StaticClass();
+    PlayerControllerClass = ASTUPlayerController::StaticClass();
 }
