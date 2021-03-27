@@ -28,6 +28,6 @@ void ASTUDevDamageActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 24, SphereColor);
-    UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, GetActorLocation(), Radius, nullptr, {}, this, nullptr, DoFullDamage);
+    UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, GetActorLocation(), Radius, DamageType, {}, this, nullptr, DoFullDamage);
 }
 
