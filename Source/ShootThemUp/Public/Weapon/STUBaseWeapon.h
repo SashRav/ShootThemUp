@@ -30,6 +30,8 @@ public:
     bool CanReload() const;
 
     FWeaponUIData GetUIData() const { return UIData; }
+    FAmmoData GetAmmoData() const { return CurrentAmmo; }
+
 
 protected:
     // Called when the game starts or when spawned
