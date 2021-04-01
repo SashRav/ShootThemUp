@@ -32,6 +32,7 @@ public:
     FWeaponUIData GetUIData() const { return UIData; }
     FAmmoData GetAmmoData() const { return CurrentAmmo; }
 
+    bool TryToAddAmmo(int32 ClipsAmount);
 
 protected:
     // Called when the game starts or when spawned
@@ -64,7 +65,8 @@ protected:
     void DecreaseAmmo();
     bool IsAmmoEmpty() const;
     bool IsClipEmpty() const;
-    
+    bool IsAmmoFull() const;
+
     void LogAmmo();
 
 private:
