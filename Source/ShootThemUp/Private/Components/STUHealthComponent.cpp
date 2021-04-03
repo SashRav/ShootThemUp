@@ -38,7 +38,7 @@ void USTUHealthComponent::OnTakeAnyDamage(
         return;
 
     SetHealth(Health - Damage);
-    OnHealthChanged.Broadcast(Health);
+    OnHealthChanged.Broadcast(Health, 0.0f);
 
     GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
 
@@ -65,8 +65,11 @@ void USTUHealthComponent::HealUpdate()
 
 void USTUHealthComponent::SetHealth(float NewHealth)
 {
-    Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
-    OnHealthChanged.Broadcast(Health);
+    const auto NextHealth = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
+    const auto HealthDelta = NextHealth - Health;
+
+    Health = NextHealth;
+    OnHealthChanged.Broadcast(Health, HealthDelta);
 }
 
  bool USTUHealthComponent::TryToAddHealth(float HealthAmount) {
