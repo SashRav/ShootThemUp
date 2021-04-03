@@ -13,7 +13,7 @@ class SHOOTTHEMUP_API ASTUBasePickup : public AActor
 {
     GENERATED_BODY()
 
-public:
+public: 
     // Sets default values for this actor's properties
     ASTUBasePickup();
 
@@ -32,7 +32,12 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 private:
+    float RotationYaw = 0.0f;
+
     virtual bool GivePickupTo(APawn* PlayerPawn);
+    
     void PickupWasTaken();
     void Respawn();
+
+    void GenerateRotationYaw();
 };
