@@ -9,7 +9,8 @@
 
 
 class USkeletalMeshComponent;
-
+class UNiagaraSystem;
+class UNiagaraComponent;
 
 
 UCLASS()
@@ -53,6 +54,10 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FWeaponUIData UIData;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* MuzzleFX;
+
+
     virtual void MakeShot();
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 
@@ -68,6 +73,8 @@ protected:
     bool IsAmmoFull() const;
 
     void LogAmmo();
+
+     UNiagaraComponent* SpawnMuzzleFX();
 
 private:
    // FTimerHandle ShotTimerHandle;
