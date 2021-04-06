@@ -17,20 +17,17 @@ class SHOOTTHEMUP_API USTUWeaponComponent : public UActorComponent
 public:
     USTUWeaponComponent();
 
-    void StartFire();
+    virtual void StartFire();
     void StopFire();
-    void NextWeapon();
+    virtual void NextWeapon();
     void Reload();
 
-   bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
+    bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
     bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
     bool TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount);
 
 protected:
-    virtual void BeginPlay() override;
-    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> WeaponData;
 
@@ -43,23 +40,32 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* EquipAnimMontage;
 
-private:
     UPROPERTY()
     ASTUBaseWeapon* CurrentWeapon = nullptr;
 
     UPROPERTY()
     TArray<ASTUBaseWeapon*> Weapons;
 
+     int32 CurrentWeaponIndex = 0;
+
+    virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+    void EquipWeapon(int32 WeaponIndex);
+
+    bool CanFire() const;
+    bool CanEquip() const;
+
+private:
     UPROPERTY()
     UAnimMontage* CurrentReloadAnimMontage = nullptr;
 
-    int32 CurrentWeaponIndex = 0;
+   
     bool EquipAnimInProgress = false;
     bool ReloadAnimInProgress = false;
 
     void SpawnWeapons();
     void AttachWeaponToSocket(ASTUBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName);
-    void EquipWeapon(int32 WeaponIndex);
 
     void PlayAnimMontage(UAnimMontage* Animation);
     void InitAnimations();
@@ -67,8 +73,6 @@ private:
     void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
     void OnReloadFinished(USkeletalMeshComponent* MeshComponent);
 
-    bool CanFire() const;
-    bool CanEquip() const;
     bool CanReload() const;
 
     void OnEmptyClip(ASTUBaseWeapon* AmmoEmptyWeapon);
