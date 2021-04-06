@@ -46,11 +46,23 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
-    const auto Controller = GetPlayerController();
-    if (!Controller)
+    const auto STUCharacter = Cast<ACharacter>(GetOwner());
+    if (!STUCharacter)
         return false;
 
-    Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    if (STUCharacter->IsPlayerControlled())
+    {
+        const auto Controller = GetPlayerController();
+        if (!Controller)
+            return false;
+
+        Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    }
+    else
+    {
+        ViewLocation = GetMuzzleWorldLocation();
+        ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSoketName);
+    }
     return true;
 }
 
@@ -139,13 +151,14 @@ bool ASTUBaseWeapon::IsAmmoFull() const
     return CurrentAmmo.Clips == DefaultAmmo.Clips && CurrentAmmo.Bullets == DefaultAmmo.Bullets;
 }
 
-bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount) {
+bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
+{
 
     if (CurrentAmmo.Infinite || IsAmmoFull() || ClipsAmount <= 0)
         return false;
 
     if (IsAmmoEmpty())
-    {   
+    {
         UE_LOG(LogBaseWeapon, Display, TEXT("Ammo was empty!"));
         CurrentAmmo.Clips = FMath::Clamp(ClipsAmount, 0, DefaultAmmo.Clips + 1);
         OnClipEmpty.Broadcast(this);
@@ -174,7 +187,8 @@ bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount) {
     return true;
 }
 
-UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX() {
+UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX()
+{
     return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, //
         WeaponMesh,                                               //
         MuzzleSoketName,                                          //
