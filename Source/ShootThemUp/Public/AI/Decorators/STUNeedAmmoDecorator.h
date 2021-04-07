@@ -4,22 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTDecorator.h"
-#include "STUHealthPercentecorator.generated.h"
+#include "STUNeedAmmoDecorator.generated.h"
 
-/**
- *
- */
+class ASTUBaseWeapon; 
+
 UCLASS()
-class SHOOTTHEMUP_API USTUHealthPercentecorator : public UBTDecorator
+class SHOOTTHEMUP_API USTUNeedAmmoDecorator : public UBTDecorator
 {
     GENERATED_BODY()
 
 public:
-    USTUHealthPercentecorator();
+    USTUNeedAmmoDecorator();
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float HealthPercent = 0.6;
+    TSubclassOf<ASTUBaseWeapon> WeaponType;
 
     virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 };
