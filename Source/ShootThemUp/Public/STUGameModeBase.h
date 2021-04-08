@@ -31,5 +31,11 @@ protected:
     TSubclassOf<APawn> AIPawnClass;
 
 private:
+    int32 CurrentRound = 1;
+    int32 RoundCoundDown = 0;
+    FTimerHandle GameRoundTimerHandle;
+
     void SpawnBots();
+    void StartRound();
+    void GameTimerUpdate();
 };
