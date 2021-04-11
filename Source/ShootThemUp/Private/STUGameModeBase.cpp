@@ -80,7 +80,6 @@ void ASTUGameModeBase::GameTimerUpdate()
         else
         {
             GameOver();
-
         }
     }
 }
@@ -193,42 +192,69 @@ void ASTUGameModeBase::LogPlayerInfo()
     }
 }
 
-    void ASTUGameModeBase::StartRespawn(AController* Controller) {
+void ASTUGameModeBase::StartRespawn(AController* Controller)
+{
 
-        const auto RespawnAvailable = RoundCoundDown > MinRoundTimeForRespawn + GameData.RespawnTime;
-        if (!RespawnAvailable)
-            return;
-        const auto RespawnComponent = STUUtils::GetSTUPlayerController<USTURespawnComponent>(Controller);
-        if (!RespawnComponent)
-            return;
+    const auto RespawnAvailable = RoundCoundDown > MinRoundTimeForRespawn + GameData.RespawnTime;
+    if (!RespawnAvailable)
+        return;
+    const auto RespawnComponent = STUUtils::GetSTUPlayerController<USTURespawnComponent>(Controller);
+    if (!RespawnComponent)
+        return;
 
-        RespawnComponent->Respawn(GameData.RespawnTime);
+    RespawnComponent->Respawn(GameData.RespawnTime);
+}
+
+void ASTUGameModeBase::RespawnRequest(AController* Controller)
+{
+    ResetOnePlayer(Controller);
+}
+
+void ASTUGameModeBase::GameOver()
+{
+    UE_LOG(LogSTUGameModeBase, Display, TEXT("=========GAME OVER======="));
+    LogPlayerInfo();
+
+    for (auto Pawn : TActorRange<APawn>(GetWorld()))
+    {
+        if (Pawn)
+        {
+            Pawn->TurnOff();
+            Pawn->DisableInput(nullptr);
+        }
+    }
+    SetMatchState(ESTUMatchState::GameOver);
+}
+
+void ASTUGameModeBase::SetMatchState(ESTUMatchState State)
+{
+    if (MatchState == State)
+        return;
+
+    MatchState = State;
+    OnMatchStateChanged.Broadcast(MatchState);
+}
+
+bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+
+    const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate);
+
+    if (PauseSet)
+    {
+        SetMatchState(ESTUMatchState::Pause);
     }
 
- void ASTUGameModeBase::RespawnRequest(AController* Controller) {
-     ResetOnePlayer(Controller);
- }
+    return PauseSet;
+}
 
+bool ASTUGameModeBase::ClearPause()
+{
+    const auto PauseCleared = Super::ClearPause();
+    if (PauseCleared)
+    {
+        SetMatchState(ESTUMatchState::InProgress);
+    }
 
- void ASTUGameModeBase::GameOver() {
-     UE_LOG(LogSTUGameModeBase, Display, TEXT("=========GAME OVER======="));
-     LogPlayerInfo();
-
-     for (auto Pawn : TActorRange<APawn>(GetWorld()))
-     {
-         if (Pawn)
-         {
-             Pawn->TurnOff();
-             Pawn->DisableInput(nullptr);
-         }
-     }
-     SetMatchState(ESTUMatchState::GameOver);
- }
-
- void ASTUGameModeBase::SetMatchState(ESTUMatchState State) {
-     if (MatchState == State)
-         return;
-
-     MatchState = State;
-     OnMatchStateChanged.Broadcast(MatchState);
- }
+    return PauseCleared;
+}
