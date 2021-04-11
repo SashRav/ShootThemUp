@@ -78,7 +78,8 @@ void ASTUBaseCharacter::OnDeath()
     GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     WeaponComponent->StopFire();
 
-    GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+    GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECR_Ignore);
     GetMesh()->SetSimulatePhysics(true);
 }
 
