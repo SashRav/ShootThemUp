@@ -1,19 +1,23 @@
 // Shoot Them Up game. All Rights Resived.
 
-
 #include "AI/STUAIController.h"
 #include "AI/STUAICharacter.h"
 #include "Components/STUAIPerceptionComponent.h"
+#include "Components/STURespawnComponent.h"
 #include "BehaviorTree/BlackBoardComponent.h"
 
-ASTUAIController::ASTUAIController() {
+ASTUAIController::ASTUAIController()
+{
     STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("STUAIPerceptionComponent");
     SetPerceptionComponent(*STUAIPerceptionComponent);
+
+    RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
 
     bWantsPlayerState = true;
 }
 
-void ASTUAIController::OnPossess(APawn* InPawn){
+void ASTUAIController::OnPossess(APawn* InPawn)
+{
     Super::OnPossess(InPawn);
 
     const auto STUCharacter = Cast<ASTUAICharacter>(InPawn);
@@ -21,18 +25,18 @@ void ASTUAIController::OnPossess(APawn* InPawn){
     {
         RunBehaviorTree(STUCharacter->BehaviorTreeAsset);
     }
-    
 }
 
-void ASTUAIController::Tick(float DeltaTime) {
+void ASTUAIController::Tick(float DeltaTime)
+{
     Super::Tick(DeltaTime);
     const auto AimActor = GetFocusOnActor();
 
     SetFocus(AimActor);
-
 }
 
-AActor* ASTUAIController::GetFocusOnActor() const {
+AActor* ASTUAIController::GetFocusOnActor() const
+{
     if (!GetBlackboardComponent())
         return nullptr;
 
