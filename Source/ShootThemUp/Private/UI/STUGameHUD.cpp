@@ -3,24 +3,40 @@
 #include "UI/STUGameHUD.h"
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
+#include "STUGameModeBase.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTUGameHUD, All, All);
 
 void ASTUGameHUD::DrawHUD()
 {
     Super::DrawHUD();
- //   DrawCrossHair();
+    //   DrawCrossHair();
 }
 
-void ASTUGameHUD::BeginPlay() {
+void ASTUGameHUD::BeginPlay()
+{
     Super::BeginPlay();
     auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
     if (PlayerHUDWidget)
     {
         PlayerHUDWidget->AddToViewport();
     }
+    if (GetWorld())
+    {
+        const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+        if (GameMode)
+        {
+            GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::OnMatchStateChanged);
+        }
+    }
 }
 
-void ASTUGameHUD::DrawCrossHair() {
+void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State) {
+    UE_LOG(LogSTUGameHUD, Display, TEXT("Match state changed: %s "), *UEnum::GetValueAsString(State));
+}
+
+void ASTUGameHUD::DrawCrossHair()
+{
     const TInterval<float> Center(Canvas->SizeX * 0.5, Canvas->SizeY * 0.5);
 
     const float HalfLineSize = 10.0f;
@@ -29,6 +45,6 @@ void ASTUGameHUD::DrawCrossHair() {
 
     DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LineColor, LineThickness);
     DrawLine(Center.Min, Center.Max - HalfLineSize, Center.Min, Center.Max + HalfLineSize, LineColor, LineThickness);
-
 }
+
 
