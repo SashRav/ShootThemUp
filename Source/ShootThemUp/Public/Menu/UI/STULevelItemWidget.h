@@ -24,7 +24,6 @@ public:
 
     void SetSelected(bool IsSelected);
 
-
 protected:
     UPROPERTY(meta = (BindWidget))
     UButton* LevelSelectButton;
@@ -45,4 +44,10 @@ private:
 
     UFUNCTION()
     void OnLevelItemClicked();
+
+    UFUNCTION()
+    void OnLevelItemHoverd();
+
+    UFUNCTION()
+    void OnLevelItemUnhoverd();
 };
