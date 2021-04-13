@@ -39,6 +39,8 @@ protected:
 
     virtual void BeginPlay() override;
     virtual void OnDeath();
+    virtual void OnHealthChanged(float Health, float HelthDelta);
+
 
 public:
     // Called every frame
@@ -55,8 +57,7 @@ public:
     void SetPlayerColor(const FLinearColor& Color);
 
 private:
-    void OnHealthChanged(float Health, float HelthDelta);
-
+  
     UFUNCTION()
     void OnGroundLanded(const FHitResult& Hit);
 };
