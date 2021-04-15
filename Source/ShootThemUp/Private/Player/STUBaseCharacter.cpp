@@ -11,6 +11,8 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
 #include "Weapon/STUBaseWeapon.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All)
 
@@ -81,6 +83,8 @@ void ASTUBaseCharacter::OnDeath()
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
     GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECR_Ignore);
     GetMesh()->SetSimulatePhysics(true);
+
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 }
 
 void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)

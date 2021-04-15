@@ -7,11 +7,10 @@
 #include "STUCoreTypes.h"
 #include "STUBaseWeapon.generated.h"
 
-
 class USkeletalMeshComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
-
+class USoundCue;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
@@ -51,7 +50,7 @@ protected:
     float TraceMaxDistance = 1500.0f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-    FAmmoData DefaultAmmo {15, 10, false};
+    FAmmoData DefaultAmmo{15, 10, false};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FWeaponUIData UIData;
@@ -59,25 +58,26 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     UNiagaraSystem* MuzzleFX;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* FireSound;
 
     virtual void MakeShot();
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 
     bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
     FVector GetMuzzleWorldLocation() const;
-    
+
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
     void DecreaseAmmo();
-    
+
     bool IsClipEmpty() const;
- 
 
     void LogAmmo();
 
-     UNiagaraComponent* SpawnMuzzleFX();
+    UNiagaraComponent* SpawnMuzzleFX();
 
 private:
-   // FTimerHandle ShotTimerHandle;
+    // FTimerHandle ShotTimerHandle;
     FAmmoData CurrentAmmo;
 };
