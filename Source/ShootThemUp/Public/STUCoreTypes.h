@@ -50,7 +50,7 @@ DECLARE_MULTICAST_DELEGATE(FOnDeath);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, float);
 
 // VFX
-
+class USoundCue;
 class UNiagaraSystem;
 
 USTRUCT(BlueprintType)
@@ -80,6 +80,9 @@ struct FImpactData
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FDecalData DecalData;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+    USoundCue* Sound;
 };
 
 USTRUCT(BlueprintType)
@@ -131,4 +134,4 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMatchStat
     UTexture2D* LevelThumb;
 };
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelSelectedSignature, const FLevelData&)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelSelectedSignature, const FLevelData&)
