@@ -5,13 +5,18 @@
 #include "STUUtils.h"
 #include "Components/STUHealthComponent.h"
 #include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Damage.h"
 
 AActor* USTUAIPerceptionComponent::GetColsestEnemy() const
 {
     TArray<AActor*> PerciveActors;
     GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(), PerciveActors);
     if (PerciveActors.Num() == 0)
-        return nullptr;
+    {
+        GetCurrentlyPerceivedActors(UAISense_Damage::StaticClass(), PerciveActors);
+        if (PerciveActors.Num() == 0)
+            return nullptr;
+    }
 
     const auto Controller = Cast<AAIController>(GetOwner());
     if (!Controller)
