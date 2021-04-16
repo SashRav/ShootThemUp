@@ -110,3 +110,16 @@ void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color)
 
     MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
 }
+
+void ASTUBaseCharacter::TurnOff()
+{
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
+    Super::TurnOff();
+}
+void ASTUBaseCharacter::Reset()
+{
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
+    Super::Reset();
+}

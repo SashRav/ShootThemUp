@@ -8,6 +8,7 @@
 #include "Player/STUPlayerState.h"
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
+#include "Components/STUWeaponComponent.h"
 #include "EngineUtils.h"
 #include "STUGameInstance.h"
 
@@ -102,6 +103,7 @@ void ASTUGameModeBase::ResetOnePlayer(AController* Controller)
     if (Controller && Controller->GetPawn())
     {
         Controller->GetPawn()->Reset();
+
     }
     RestartPlayer(Controller);
     SetPlayerColor(Controller);
@@ -246,6 +248,7 @@ bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDel
 
     if (PauseSet)
     {
+        StopAllFire();
         SetMatchState(ESTUMatchState::Pause);
     }
 
@@ -262,3 +265,14 @@ bool ASTUGameModeBase::ClearPause()
 
     return PauseCleared;
 }
+
+void ASTUGameModeBase::StopAllFire() {
+    for (auto Pawn : TActorRange<APawn>(GetWorld()))
+    {
+        const auto WeaponCompoenent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(Pawn);
+        if (!WeaponCompoenent)
+            continue;
+
+        WeaponCompoenent->StopFire();
+    }
+ }
