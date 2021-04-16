@@ -36,6 +36,10 @@ public:
     bool IsAmmoEmpty() const;
     bool IsAmmoFull() const;
 
+    virtual void Zoom(bool Enabled) {
+
+    }
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
