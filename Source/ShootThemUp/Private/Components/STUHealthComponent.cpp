@@ -1,13 +1,13 @@
 // Shoot Them Up game. All Rights Resived.
 
 #include "Components/STUHealthComponent.h"
-#include "GameFramework/Actor.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Camera/CameraShake.h"
 #include "STUGameModeBase.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
@@ -29,11 +29,26 @@ void USTUHealthComponent::BeginPlay()
     if (ComponentOwner)
     {
         ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &USTUHealthComponent::OnTakeAnyDamage);
+        ComponentOwner->OnTakePointDamage.AddDynamic(this, &USTUHealthComponent::OnTakePointDamage);
+        ComponentOwner->OnTakeRadialDamage.AddDynamic(this, &USTUHealthComponent::OnTakeRadialDamage);
     }
 }
 
-void USTUHealthComponent::OnTakeAnyDamage(
-    AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+void USTUHealthComponent::OnTakePointDamage(AActor* DamagedActor, float Damage, class AController* InstigatedBy, FVector HitLocation,
+    class UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection, const class UDamageType* DamageType,
+    AActor* DamageCauser)
+{
+    const auto FinalDamage = Damage * GetPointDamageModifier(DamagedActor, BoneName);
+    ApplyDamage(FinalDamage, InstigatedBy);
+}
+
+void USTUHealthComponent::OnTakeRadialDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, FVector Origin,
+    FHitResult HitInfo, class AController* InstigatedBy, AActor* DamageCauser)
+{
+    ApplyDamage(Damage, InstigatedBy);
+}
+
+void USTUHealthComponent::ApplyDamage(float Damage, AController* InstigatedBy)
 {
     if (Damage <= 0.0f || IsDead() || !GetWorld())
         return;
@@ -55,6 +70,11 @@ void USTUHealthComponent::OnTakeAnyDamage(
     PlayCameraShake();
 }
 
+void USTUHealthComponent::OnTakeAnyDamage(
+    AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+}
+
 void USTUHealthComponent::HealUpdate()
 {
     SetHealth(Health + HealModifire);
@@ -74,18 +94,21 @@ void USTUHealthComponent::SetHealth(float NewHealth)
     OnHealthChanged.Broadcast(Health, HealthDelta);
 }
 
- bool USTUHealthComponent::TryToAddHealth(float HealthAmount) {
-     if (IsDead() || IsHealthFull())
-         return false;
+bool USTUHealthComponent::TryToAddHealth(float HealthAmount)
+{
+    if (IsDead() || IsHealthFull())
+        return false;
 
-     SetHealth(Health + HealthAmount);
-     return true;
- }
-bool USTUHealthComponent::IsHealthFull() const {
+    SetHealth(Health + HealthAmount);
+    return true;
+}
+bool USTUHealthComponent::IsHealthFull() const
+{
     return FMath::IsNearlyEqual(Health, MaxHealth);
 }
 
-void USTUHealthComponent::PlayCameraShake() {
+void USTUHealthComponent::PlayCameraShake()
+{
     if (IsDead())
         return;
 
@@ -100,7 +123,8 @@ void USTUHealthComponent::PlayCameraShake() {
     Controller->PlayerCameraManager->StartCameraShake(CameraShake);
 }
 
-void USTUHealthComponent::Killed(AController* KillerController) {
+void USTUHealthComponent::Killed(AController* KillerController)
+{
     if (!GetWorld())
         return;
     const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -112,4 +136,16 @@ void USTUHealthComponent::Killed(AController* KillerController) {
     const auto VictimController = Player ? Player->Controller : nullptr;
 
     GameMode->Killed(KillerController, VictimController);
+}
+
+float USTUHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName) {
+    const auto Character = Cast<ACharacter>(DamagedActor);
+    if (!Character || !Character->GetMesh() || !Character->GetMesh()->GetBodyInstance(BoneName))
+        return 1.0f;
+
+    const auto PhysMaterial = Character->GetMesh()->GetBodyInstance(BoneName)->GetSimplePhysicalMaterial();
+    if (!PhysMaterial || !DamageModifiers.Contains(PhysMaterial))
+        return 1.0f;
+
+    return DamageModifiers[PhysMaterial];
 }
