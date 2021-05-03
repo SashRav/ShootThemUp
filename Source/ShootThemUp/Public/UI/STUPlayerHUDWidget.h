@@ -10,6 +10,7 @@
 #include "STUPlayerHUDWidget.generated.h"
 
 class UProgressBar;
+class UButton;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHUDWidget : public USTUBaseWidget
@@ -41,7 +42,24 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     FString FormatBullets(int32 BulletsNum) const;
 
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+   void OnStartFire();
+
+    
+    UFUNCTION(BlueprintCallable, Category = "UI")
+   void OnStopFire();
+
+
 protected:
+    
+    
+    UPROPERTY(meta = (BindWidget))
+    UButton* FireButton;
+
+    
+    
+    
     UPROPERTY(meta = (BindWidget))
     UProgressBar* HealthProgressBar;
 

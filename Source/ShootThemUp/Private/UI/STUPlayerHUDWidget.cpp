@@ -6,6 +6,7 @@
 #include "STUUtils.h"
 #include "Components/ProgressBar.h"
 #include "Player/STUPlayerState.h"
+#include "Components/Button.h"
 
 void USTUPlayerHUDWidget::NativeOnInitialized()
 {
@@ -14,6 +15,12 @@ void USTUPlayerHUDWidget::NativeOnInitialized()
     {
         GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
         OnNewPawn(GetOwningPlayerPawn());
+    }
+
+    if (FireButton)
+    {
+        FireButton->OnPressed.AddDynamic(this, &USTUPlayerHUDWidget::OnStartFire);
+        FireButton->OnReleased.AddDynamic(this, &USTUPlayerHUDWidget::OnStopFire);
     }
 }
 
@@ -111,4 +118,21 @@ FString USTUPlayerHUDWidget::FormatBullets(int32 BulletsNum) const {
     }
 
     return BulletStr;
+}
+
+void USTUPlayerHUDWidget::OnStartFire() {
+    const auto WeaponComponent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(GetOwningPlayerPawn());
+    if (!WeaponComponent)
+        return;
+
+     WeaponComponent->StartFire();
+}
+
+void USTUPlayerHUDWidget::OnStopFire()
+{
+   const auto WeaponComponent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(GetOwningPlayerPawn());
+    if (!WeaponComponent)
+        return;
+
+    WeaponComponent->StopFire();
 }
