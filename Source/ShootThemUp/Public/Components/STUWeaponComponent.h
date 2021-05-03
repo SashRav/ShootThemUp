@@ -17,8 +17,13 @@ class SHOOTTHEMUP_API USTUWeaponComponent : public UActorComponent
 public:
     USTUWeaponComponent();
 
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
     virtual void StartFire();
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
     void StopFire();
+
+
     virtual void NextWeapon();
     void Reload();
 
