@@ -18,6 +18,14 @@ class SHOOTTHEMUP_API ASTUPlayerCharacter : public ASTUBaseCharacter
 public:
     ASTUPlayerCharacter(const FObjectInitializer& ObjInit);
 
+    virtual void Jump() override;
+
+    UFUNCTION(BlueprintCallable, Category = "Moving")
+    void OnStartRunning();
+
+    UFUNCTION(BlueprintCallable, Category = "Moving")
+    void OnStopRunning();
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USpringArmComponent* SpringArmComponent;
@@ -43,15 +51,13 @@ private:
     void MoveForward(float Amount);
     void MoveRight(float Amount);
 
-    void OnStartRunning();
-    void OnStopRunning();
-
     UFUNCTION()
     void OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
     UFUNCTION()
-    void OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+    void OnCameraCollisionEndOverlap(
+        UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
     void CheckCameraOverlap();
 };

@@ -5,6 +5,8 @@
 #include "STUGameModeBase.h"
 #include "STUGameInstance.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogASTUPlayerController, All, All);
+
 ASTUPlayerController::ASTUPlayerController()
 {
     RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
@@ -56,6 +58,7 @@ void ASTUPlayerController::SetupInputComponent()
 
 void ASTUPlayerController::OnPauseGame()
 {
+    UE_LOG(LogASTUPlayerController, Display, TEXT("Works"));
     if (!GetWorld() || !GetWorld()->GetAuthGameMode())
         return;
     GetWorld()->GetAuthGameMode()->SetPause(this);

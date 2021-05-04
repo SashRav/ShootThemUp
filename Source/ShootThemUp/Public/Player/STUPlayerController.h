@@ -16,6 +16,9 @@ class SHOOTTHEMUP_API ASTUPlayerController : public APlayerController
 
 public:
     ASTUPlayerController();
+     
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    void OnPauseGame();
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -26,8 +29,6 @@ protected:
     virtual void SetupInputComponent() override;
 
 private:
-    
-    void OnPauseGame();
     void OnMatchStateChanged(ESTUMatchState State);
     void OnMuteSound();
 };

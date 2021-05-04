@@ -89,6 +89,11 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
     PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Released, WeaponComponent, &USTUWeaponComponent::Zoom, false);
 }
 
+void ASTUPlayerCharacter::Jump()
+{
+    Super::Jump();
+}
+
 void ASTUPlayerCharacter::MoveForward(float Amount)
 {
     IsMovingForward = Amount > 0.0f;

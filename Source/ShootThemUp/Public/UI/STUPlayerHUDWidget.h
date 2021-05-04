@@ -11,6 +11,7 @@
 
 class UProgressBar;
 class UButton;
+class APawn;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHUDWidget : public USTUBaseWidget
@@ -41,25 +42,8 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     FString FormatBullets(int32 BulletsNum) const;
-
-
-    UFUNCTION(BlueprintCallable, Category = "UI")
-   void OnStartFire();
-
     
-    UFUNCTION(BlueprintCallable, Category = "UI")
-   void OnStopFire();
-
-
 protected:
-    
-    
-    UPROPERTY(meta = (BindWidget))
-    UButton* FireButton;
-
-    
-    
-    
     UPROPERTY(meta = (BindWidget))
     UProgressBar* HealthProgressBar;
 
@@ -76,6 +60,26 @@ protected:
     FLinearColor BadColor = FLinearColor::Red;
 
     virtual void NativeOnInitialized() override;
+
+    // Additional buttons
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* FireButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* JumpButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* RunButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* NextWeaponButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* ReloadButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* PauseButton;
 
 private:
     void OnHealthChanged(float Health, float HelthDelta);

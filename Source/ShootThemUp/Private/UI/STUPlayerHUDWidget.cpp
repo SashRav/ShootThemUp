@@ -6,32 +6,78 @@
 #include "STUUtils.h"
 #include "Components/ProgressBar.h"
 #include "Player/STUPlayerState.h"
+#include "Player/STUPlayerCharacter.h"
+#include "Player/STUPlayerController.h"
 #include "Components/Button.h"
+#include "STUCoreTypes.h"
+#include "STUGameModeBase.h"
+#include "GameFramework/PlayerController.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogUSTUPlayerHUDWidget, All, All);
 
 void USTUPlayerHUDWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
+
+    const auto PlayerController = Cast<ASTUPlayerController>(GetOwningPlayer());
+
+    //check(PlayerController);
+
     if (GetOwningPlayer())
     {
         GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
         OnNewPawn(GetOwningPlayerPawn());
     }
 
-    if (FireButton)
+    if (PlayerController)
     {
-        FireButton->OnPressed.AddDynamic(this, &USTUPlayerHUDWidget::OnStartFire);
-        FireButton->OnReleased.AddDynamic(this, &USTUPlayerHUDWidget::OnStopFire);
+        if (PauseButton)
+        {
+            PauseButton->OnClicked.AddDynamic(PlayerController, &ASTUPlayerController::OnPauseGame);
+        }
     }
 }
 
 void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
 {
     const auto HealthComponent = STUUtils::GetSTUPlayerController<USTUHealthComponent>(NewPawn);
+    const auto PlayerCharacter = Cast<ASTUPlayerCharacter>(NewPawn);
+    const auto WeaponComponent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(NewPawn);
+
     if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this))
     {
         HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
     }
 
+    if (PlayerCharacter)
+    {
+        if (JumpButton)
+        {
+            JumpButton->OnClicked.AddDynamic(PlayerCharacter, &ASTUPlayerCharacter::Jump);
+        }
+        if (RunButton)
+        {
+            RunButton->OnPressed.AddDynamic(PlayerCharacter, &ASTUPlayerCharacter::OnStartRunning);
+            RunButton->OnReleased.AddDynamic(PlayerCharacter, &ASTUPlayerCharacter::OnStopRunning);
+        }
+    }
+
+    if (WeaponComponent)
+    {
+        if (NextWeaponButton)
+        {
+            NextWeaponButton->OnClicked.AddDynamic(WeaponComponent, &USTUWeaponComponent::NextWeapon);
+        }
+        if (FireButton)
+        {
+            FireButton->OnPressed.AddDynamic(WeaponComponent, &USTUWeaponComponent::StartFire);
+            FireButton->OnReleased.AddDynamic(WeaponComponent, &USTUWeaponComponent::StopFire);
+        }
+        if (ReloadButton)
+        {
+            ReloadButton->OnClicked.AddDynamic(WeaponComponent, &USTUWeaponComponent::Reload);
+        }
+    }
     UpdateHealthBar();
 }
 
@@ -105,7 +151,8 @@ void USTUPlayerHUDWidget::UpdateHealthBar()
     }
 }
 
-FString USTUPlayerHUDWidget::FormatBullets(int32 BulletsNum) const {
+FString USTUPlayerHUDWidget::FormatBullets(int32 BulletsNum) const
+{
     const int32 MaxLen = 3;
     const TCHAR PrefixSymbol = '0';
 
@@ -118,21 +165,4 @@ FString USTUPlayerHUDWidget::FormatBullets(int32 BulletsNum) const {
     }
 
     return BulletStr;
-}
-
-void USTUPlayerHUDWidget::OnStartFire() {
-    const auto WeaponComponent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(GetOwningPlayerPawn());
-    if (!WeaponComponent)
-        return;
-
-     WeaponComponent->StartFire();
-}
-
-void USTUPlayerHUDWidget::OnStopFire()
-{
-   const auto WeaponComponent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(GetOwningPlayerPawn());
-    if (!WeaponComponent)
-        return;
-
-    WeaponComponent->StopFire();
 }

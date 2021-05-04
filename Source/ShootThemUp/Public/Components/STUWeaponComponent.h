@@ -23,8 +23,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     void StopFire();
 
-
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
     virtual void NextWeapon();
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
     void Reload();
 
     bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
