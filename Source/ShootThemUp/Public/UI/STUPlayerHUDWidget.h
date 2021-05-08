@@ -42,7 +42,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "UI")
     FString FormatBullets(int32 BulletsNum) const;
-    
+
 protected:
     UPROPERTY(meta = (BindWidget))
     UProgressBar* HealthProgressBar;
@@ -63,20 +63,20 @@ protected:
 
     // Additional buttons
 
-    UPROPERTY(meta = (BindWidget))
-    UButton* FireButton;
+    // UPROPERTY(meta = (BindWidget))
+    // UButton* FireButton;
 
-    UPROPERTY(meta = (BindWidget))
-    UButton* JumpButton;
+    // UPROPERTY(meta = (BindWidget))
+    // UButton* JumpButton;
 
-    UPROPERTY(meta = (BindWidget))
-    UButton* RunButton;
+    // UPROPERTY(meta = (BindWidget))
+    // UButton* RunButton;
+
+    // UPROPERTY(meta = (BindWidget))
+    // UButton* ReloadButton;
 
     UPROPERTY(meta = (BindWidget))
     UButton* NextWeaponButton;
-
-    UPROPERTY(meta = (BindWidget))
-    UButton* ReloadButton;
 
     UPROPERTY(meta = (BindWidget))
     UButton* PauseButton;

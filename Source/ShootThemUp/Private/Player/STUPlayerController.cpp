@@ -46,7 +46,7 @@ void ASTUPlayerController::OnMatchStateChanged(ESTUMatchState State)
         //   ActivateTouchInterface(nullptr);
 
         SetInputMode(FInputModeGameAndUI());
-        bShowMouseCursor = true;
+        bShowMouseCursor = false;
     }
     else
     {

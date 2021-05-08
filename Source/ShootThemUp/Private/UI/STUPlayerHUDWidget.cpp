@@ -21,7 +21,7 @@ void USTUPlayerHUDWidget::NativeOnInitialized()
 
     const auto PlayerController = Cast<ASTUPlayerController>(GetOwningPlayer());
 
-    //check(PlayerController);
+    check(PlayerController);
 
     if (GetOwningPlayer())
     {
@@ -41,7 +41,7 @@ void USTUPlayerHUDWidget::NativeOnInitialized()
 void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
 {
     const auto HealthComponent = STUUtils::GetSTUPlayerController<USTUHealthComponent>(NewPawn);
-    const auto PlayerCharacter = Cast<ASTUPlayerCharacter>(NewPawn);
+    //const auto PlayerCharacter = Cast<ASTUPlayerCharacter>(NewPawn);
     const auto WeaponComponent = STUUtils::GetSTUPlayerController<USTUWeaponComponent>(NewPawn);
 
     if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this))
@@ -49,7 +49,7 @@ void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
         HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChanged);
     }
 
-    if (PlayerCharacter)
+  /*  if (PlayerCharacter)
     {
         if (JumpButton)
         {
@@ -60,7 +60,7 @@ void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
             RunButton->OnPressed.AddDynamic(PlayerCharacter, &ASTUPlayerCharacter::OnStartRunning);
             RunButton->OnReleased.AddDynamic(PlayerCharacter, &ASTUPlayerCharacter::OnStopRunning);
         }
-    }
+    }*/
 
     if (WeaponComponent)
     {
@@ -68,15 +68,15 @@ void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
         {
             NextWeaponButton->OnClicked.AddDynamic(WeaponComponent, &USTUWeaponComponent::NextWeapon);
         }
-        if (FireButton)
-        {
-            FireButton->OnPressed.AddDynamic(WeaponComponent, &USTUWeaponComponent::StartFire);
-            FireButton->OnReleased.AddDynamic(WeaponComponent, &USTUWeaponComponent::StopFire);
-        }
-        if (ReloadButton)
-        {
-            ReloadButton->OnClicked.AddDynamic(WeaponComponent, &USTUWeaponComponent::Reload);
-        }
+        //if (FireButton)
+        //{
+        //    FireButton->OnPressed.AddDynamic(WeaponComponent, &USTUWeaponComponent::StartFire);
+        //    FireButton->OnReleased.AddDynamic(WeaponComponent, &USTUWeaponComponent::StopFire);
+        //}
+        //if (ReloadButton)
+        //{
+        //    ReloadButton->OnClicked.AddDynamic(WeaponComponent, &USTUWeaponComponent::Reload);
+        //}
     }
     UpdateHealthBar();
 }
