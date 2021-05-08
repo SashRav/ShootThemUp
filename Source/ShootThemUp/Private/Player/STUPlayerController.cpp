@@ -4,6 +4,7 @@
 #include "Components/STURespawnComponent.h"
 #include "STUGameModeBase.h"
 #include "STUGameInstance.h"
+#include "UI/STUGameHUD.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogASTUPlayerController, All, All);
 
@@ -26,6 +27,11 @@ void ASTUPlayerController::BeginPlay()
     if (GetWorld())
     {
         const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+
+       // ActivateTouchInterface(TouchInterface);
+       // GameMode->HUDClass = ASTUGameHUD::StaticClass();
+        
+
         if (GameMode)
         {
             GameMode->OnMatchStateChanged.AddUObject(this, &ASTUPlayerController::OnMatchStateChanged);
@@ -33,15 +39,18 @@ void ASTUPlayerController::BeginPlay()
     }
 }
 
-void ASTUPlayerController::OnMatchStateChanged(ESTUMatchState State) {
+void ASTUPlayerController::OnMatchStateChanged(ESTUMatchState State)
+{
     if (State == ESTUMatchState::InProgress)
     {
-        SetInputMode(FInputModeGameOnly());
-        bShowMouseCursor = false;
+        //   ActivateTouchInterface(nullptr);
+
+        SetInputMode(FInputModeGameAndUI());
+        bShowMouseCursor = true;
     }
     else
     {
-        SetInputMode(FInputModeUIOnly());
+        SetInputMode(FInputModeGameAndUI());
         bShowMouseCursor = true;
     }
 }
@@ -64,13 +73,14 @@ void ASTUPlayerController::OnPauseGame()
     GetWorld()->GetAuthGameMode()->SetPause(this);
 }
 
- void ASTUPlayerController::OnMuteSound() {
-     if (!GetWorld())
-         return;
-     
-     const auto STUGameInstanse = GetWorld()->GetGameInstance<USTUGameInstance>();
-     if (!STUGameInstanse)
-         return;
+void ASTUPlayerController::OnMuteSound()
+{
+    if (!GetWorld())
+        return;
 
-     STUGameInstanse->ToggleVolume();
- }
+    const auto STUGameInstanse = GetWorld()->GetGameInstance<USTUGameInstance>();
+    if (!STUGameInstanse)
+        return;
+
+    STUGameInstanse->ToggleVolume();
+}

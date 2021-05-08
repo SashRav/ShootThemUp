@@ -94,12 +94,25 @@ void ASTUPlayerCharacter::Jump()
     Super::Jump();
 }
 
+
+
 void ASTUPlayerCharacter::MoveForward(float Amount)
 {
     IsMovingForward = Amount > 0.0f;
     if (Amount == 0.0f)
         return;
     AddMovementInput(GetActorForwardVector(), Amount);
+
+    //if (Amount != 0.f)
+    //{
+    //    if (Controller)
+    //    {
+    //        FRotator const ControlSpaceRot = GetActorRotation();
+
+    //        // transform to world space and add it
+    //        AddMovementInput(FRotationMatrix(ControlSpaceRot).GetScaledAxis(EAxis::X), Amount);
+    //    }
+    //}
 }
 
 void ASTUPlayerCharacter::MoveRight(float Amount)

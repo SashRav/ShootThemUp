@@ -16,13 +16,16 @@ class SHOOTTHEMUP_API ASTUPlayerController : public APlayerController
 
 public:
     ASTUPlayerController();
-     
+
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     void OnPauseGame();
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTURespawnComponent* RespawnComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Touch")
+    UTouchInterface* TouchInterface;
 
     virtual void BeginPlay() override;
     virtual void OnPossess(APawn* InPawn) override;
