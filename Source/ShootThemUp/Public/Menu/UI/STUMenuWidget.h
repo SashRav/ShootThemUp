@@ -18,6 +18,10 @@ class SHOOTTHEMUP_API USTUMenuWidget : public USTUBaseWidget
 {
     GENERATED_BODY()
 
+public:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    bool IsSettingsVisible = false;
+
 protected:
     UPROPERTY(meta = (BindWidget))
     UButton* StartGameButton;
@@ -26,10 +30,16 @@ protected:
     UButton* QuitGameButton;
 
     UPROPERTY(meta = (BindWidget))
+    UButton* OpenSettingsButton;
+
+    UPROPERTY(meta = (BindWidget))
     UHorizontalBox* LevelItemsBox;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UUserWidget> LevelItemWidgetClass;
+
+    UPROPERTY(meta = (BindWidget))
+    UUserWidget* WBP_Settings;
 
     UPROPERTY(Transient, meta = (BindWidgetAnim))
     UWidgetAnimation* HideAnimation;
@@ -49,6 +59,9 @@ private:
 
     UFUNCTION()
     void OnQuitGame();
+
+    UFUNCTION()
+    void OpenSettings();
 
     void InitLevelItems();
     void OnLevelSelected(const FLevelData& Data);

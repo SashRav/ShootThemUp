@@ -25,6 +25,11 @@ void USTUMenuWidget::NativeOnInitialized()
         QuitGameButton->OnClicked.AddDynamic(this, &USTUMenuWidget::OnQuitGame);
     }
 
+    if (OpenSettingsButton)
+    {
+        OpenSettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::OpenSettings);
+    }
+
     InitLevelItems();
 }
 
@@ -105,4 +110,13 @@ USTUGameInstance* USTUMenuWidget::GetSTUGameInstance() const {
     if (!GetWorld())
         return nullptr;
     return GetWorld()->GetGameInstance<USTUGameInstance>();
+}
+
+void USTUMenuWidget::OpenSettings() 
+{
+    if (!IsSettingsVisible)
+    {
+        WBP_Settings->SetVisibility(ESlateVisibility::Visible);
+        IsSettingsVisible = true;
+    }
 }
