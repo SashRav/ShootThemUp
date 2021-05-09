@@ -48,14 +48,15 @@ void ASTUPlayerController::OnMatchStateChanged(ESTUMatchState State)
 
     if (State == ESTUMatchState::InProgress)
     {
-        ActivateTouchInterface(STUGameInstanse->TouchInterface);
-
+    //    ActivateTouchInterface(nullptr);
+     //   ActivateTouchInterface(STUGameInstanse->TouchInterface);
+        CreateTouchInterface();
         SetInputMode(FInputModeGameAndUI());
         bShowMouseCursor = false;
     }
     else
     {
-        ActivateTouchInterface(nullptr);
+       //   ActivateTouchInterface(nullptr);
 
         SetInputMode(FInputModeUIOnly());
         bShowMouseCursor = true;

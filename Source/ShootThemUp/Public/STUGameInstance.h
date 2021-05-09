@@ -26,6 +26,8 @@ public:
 
     FName GetMenuLevelName() const { return MenuLevelName; }
 
+    void SetTouchInterface(UTouchInterface* STouchInterface) { TouchInterface = STouchInterface; }
+
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UTouchInterface* TouchInterface;
 

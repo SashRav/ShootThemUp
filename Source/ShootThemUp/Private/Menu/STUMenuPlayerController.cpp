@@ -7,7 +7,10 @@ void ASTUMenuPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    this->ActivateTouchInterface(nullptr);
+    const auto GameInstance = Cast<USTUGameInstance>(GetGameInstance());
+    //GameInstance->SetTouchInterface(this->CurrentTouchInterface);
+
+    this->ActivateTouchInterface(GameInstance->TouchInterface);
 
     SetInputMode(FInputModeUIOnly());
     bShowMouseCursor = true;

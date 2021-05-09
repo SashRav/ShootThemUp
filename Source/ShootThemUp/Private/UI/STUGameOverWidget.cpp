@@ -40,7 +40,7 @@ void USTUGameOverWidget::OnMatchStateChanged(ESTUMatchState State)
     if (!PlayerController)
         return;
 
-    PlayerController->ActivateTouchInterface(nullptr);
+    //PlayerController->ActivateTouchInterface(nullptr);
 }
 void USTUGameOverWidget::UpdatePlayerStat()
 {
