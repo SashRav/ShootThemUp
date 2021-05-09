@@ -26,7 +26,6 @@ void USTUGameOverWidget::NativeOnInitialized()
     {
         ResetLevelButton->OnClicked.AddDynamic(this, &USTUGameOverWidget::OnResetLevel);
     }
-
 }
 
 void USTUGameOverWidget::OnMatchStateChanged(ESTUMatchState State)
@@ -35,6 +34,13 @@ void USTUGameOverWidget::OnMatchStateChanged(ESTUMatchState State)
     {
         UpdatePlayerStat();
     }
+
+    const auto PlayerController = GetOwningPlayer();
+
+    if (!PlayerController)
+        return;
+
+    PlayerController->ActivateTouchInterface(nullptr);
 }
 void USTUGameOverWidget::UpdatePlayerStat()
 {
@@ -68,9 +74,9 @@ void USTUGameOverWidget::UpdatePlayerStat()
     }
 }
 
-void USTUGameOverWidget::OnResetLevel() 
+void USTUGameOverWidget::OnResetLevel()
 {
-    //const FName CurrentLevelName = "TestLevel";
+    // const FName CurrentLevelName = "TestLevel";
     const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
     UGameplayStatics::OpenLevel(this, FName(CurrentLevelName));
 }

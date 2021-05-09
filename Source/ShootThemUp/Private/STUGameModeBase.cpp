@@ -28,7 +28,6 @@ void ASTUGameModeBase::StartPlay()
 {
     Super::StartPlay();
 
-
     SpawnBots();
     CreateTeamsInfo();
 

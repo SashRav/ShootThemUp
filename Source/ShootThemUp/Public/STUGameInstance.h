@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "STUCoreTypes.h"
+#include "InputCoreTypes.h"
 #include "STUGameInstance.generated.h"
 
 class USoundClass;
+class UTouchInterface;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUGameInstance : public UGameInstance
@@ -20,9 +22,12 @@ public:
 
     TArray<FLevelData> GetLevelsData() const { return LevelsData; }
 
+    void ToggleVolume();
+
     FName GetMenuLevelName() const { return MenuLevelName; }
 
-    void ToggleVolume();
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UTouchInterface* TouchInterface;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game", meta = (ToolTip = "Level names must be uniqe!"))
@@ -33,6 +38,8 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Sound")
     USoundClass* MasterSoundClass;
+
+
 
 private:
     FLevelData StartupLevel;

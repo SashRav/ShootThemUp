@@ -7,6 +7,8 @@ void ASTUMenuPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
+    this->ActivateTouchInterface(nullptr);
+
     SetInputMode(FInputModeUIOnly());
     bShowMouseCursor = true;
 

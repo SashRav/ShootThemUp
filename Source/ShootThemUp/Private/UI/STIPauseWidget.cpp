@@ -20,4 +20,5 @@ void USTIPauseWidget::OnClearPause() {
         return;
 
     GetWorld()->GetAuthGameMode()->ClearPause();
+    this->SetVisibility(ESlateVisibility::Hidden);
 }

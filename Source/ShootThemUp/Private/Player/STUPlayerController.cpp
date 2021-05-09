@@ -27,10 +27,11 @@ void ASTUPlayerController::BeginPlay()
     if (GetWorld())
     {
         const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+        const auto STUGameInstanse = GetWorld()->GetGameInstance<USTUGameInstance>();
+        if (!STUGameInstanse)
+            return;
 
-       // ActivateTouchInterface(TouchInterface);
-       // GameMode->HUDClass = ASTUGameHUD::StaticClass();
-        
+        // ActivateTouchInterface(STUGameInstanse->TouchInterface);
 
         if (GameMode)
         {
@@ -41,16 +42,22 @@ void ASTUPlayerController::BeginPlay()
 
 void ASTUPlayerController::OnMatchStateChanged(ESTUMatchState State)
 {
+    const auto STUGameInstanse = GetWorld()->GetGameInstance<USTUGameInstance>();
+    if (!STUGameInstanse)
+        return;
+
     if (State == ESTUMatchState::InProgress)
     {
-        //   ActivateTouchInterface(nullptr);
+        ActivateTouchInterface(STUGameInstanse->TouchInterface);
 
         SetInputMode(FInputModeGameAndUI());
         bShowMouseCursor = false;
     }
     else
     {
-        SetInputMode(FInputModeGameAndUI());
+        ActivateTouchInterface(nullptr);
+
+        SetInputMode(FInputModeUIOnly());
         bShowMouseCursor = true;
     }
 }
