@@ -27,47 +27,48 @@ void USTUMenuWidget::NativeOnInitialized()
 
     if (OpenSettingsButton)
     {
-        OpenSettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::OpenSettings);
+        OpenSettingsButton->OnClicked.AddDynamic(this, &USTUMenuWidget::SetSettingsVisible);
     }
 
     InitLevelItems();
 }
 
- void USTUMenuWidget::InitLevelItems() {
-     const auto STUGameInstance = GetSTUGameInstance();
-     if (!STUGameInstance)
-         return;
+void USTUMenuWidget::InitLevelItems()
+{
+    const auto STUGameInstance = GetSTUGameInstance();
+    if (!STUGameInstance)
+        return;
 
-     checkf(STUGameInstance->GetLevelsData().Num() != 0, TEXT("Levels data must not be empty!"));
+    checkf(STUGameInstance->GetLevelsData().Num() != 0, TEXT("Levels data must not be empty!"));
 
-     if (!LevelItemsBox)
-         return;
+    if (!LevelItemsBox)
+        return;
 
-     LevelItemsBox->ClearChildren();
+    LevelItemsBox->ClearChildren();
 
-     for (auto LevelData : STUGameInstance->GetLevelsData())
-     {
-         const auto LevelItemWidget = CreateWidget<USTULevelItemWidget>(GetWorld(), LevelItemWidgetClass);
-         if (!LevelItemWidget)
-             continue;
+    for (auto LevelData : STUGameInstance->GetLevelsData())
+    {
+        const auto LevelItemWidget = CreateWidget<USTULevelItemWidget>(GetWorld(), LevelItemWidgetClass);
+        if (!LevelItemWidget)
+            continue;
 
-         LevelItemWidget->SetLevelData(LevelData);
-         LevelItemWidget->OnLevelSelected.AddUObject(this, &USTUMenuWidget::OnLevelSelected);
+        LevelItemWidget->SetLevelData(LevelData);
+        LevelItemWidget->OnLevelSelected.AddUObject(this, &USTUMenuWidget::OnLevelSelected);
 
-         LevelItemsBox->AddChild(LevelItemWidget);
-         LevelItemWidgets.Add(LevelItemWidget);
-     }
+        LevelItemsBox->AddChild(LevelItemWidget);
+        LevelItemWidgets.Add(LevelItemWidget);
+    }
 
-     if (STUGameInstance->GetStartupLevel().LevelName.IsNone())
-     {
-         OnLevelSelected(STUGameInstance->GetLevelsData()[0]);
-     }
-     else
-     {
-         OnLevelSelected(STUGameInstance->GetStartupLevel());
-     }
- }
-void USTUMenuWidget::OnLevelSelected(const FLevelData& Data) 
+    if (STUGameInstance->GetStartupLevel().LevelName.IsNone())
+    {
+        OnLevelSelected(STUGameInstance->GetLevelsData()[0]);
+    }
+    else
+    {
+        OnLevelSelected(STUGameInstance->GetStartupLevel());
+    }
+}
+void USTUMenuWidget::OnLevelSelected(const FLevelData& Data)
 {
     const auto STUGameInstance = GetSTUGameInstance();
     if (!STUGameInstance)
@@ -88,7 +89,7 @@ void USTUMenuWidget::OnLevelSelected(const FLevelData& Data)
 void USTUMenuWidget::OnStartGame()
 {
     PlayAnimation(HideAnimation);
-    UGameplayStatics::PlaySound2D(GetWorld(),StartGameSound);
+    UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
 
 void USTUMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
@@ -102,21 +103,25 @@ void USTUMenuWidget::OnAnimationFinished_Implementation(const UWidgetAnimation* 
     UGameplayStatics::OpenLevel(this, STUGameInstance->GetStartupLevel().LevelName);
 }
 
-void USTUMenuWidget::OnQuitGame() {
+void USTUMenuWidget::OnQuitGame()
+{
     UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, true);
 }
 
-USTUGameInstance* USTUMenuWidget::GetSTUGameInstance() const {
+USTUGameInstance* USTUMenuWidget::GetSTUGameInstance() const
+{
     if (!GetWorld())
         return nullptr;
     return GetWorld()->GetGameInstance<USTUGameInstance>();
 }
 
-void USTUMenuWidget::OpenSettings() 
+void USTUMenuWidget::SetSettingsVisible()
 {
-    if (!IsSettingsVisible)
-    {
-        WBP_Settings->SetVisibility(ESlateVisibility::Visible);
-        IsSettingsVisible = true;
-    }
+     WBP_Settings->SetVisibility(ESlateVisibility::Visible);
+
+}
+
+void USTUMenuWidget::SetSettingsHidden()
+{
+    WBP_Settings->SetVisibility(ESlateVisibility::Hidden);
 }

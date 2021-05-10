@@ -19,8 +19,10 @@ class SHOOTTHEMUP_API USTUMenuWidget : public USTUBaseWidget
     GENERATED_BODY()
 
 public:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-    bool IsSettingsVisible = false;
+    UFUNCTION()
+    void SetSettingsHidden();
+
+  
 
 protected:
     UPROPERTY(meta = (BindWidget))
@@ -47,6 +49,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
     USoundCue* StartGameSound;
 
+      UPROPERTY()
+    bool IsSettingsVisible = false;
+
     virtual void NativeOnInitialized() override;
     virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
 
@@ -60,11 +65,13 @@ private:
     UFUNCTION()
     void OnQuitGame();
 
-    UFUNCTION()
-    void OpenSettings();
+        UFUNCTION()
+    void SetSettingsVisible();
 
     void InitLevelItems();
     void OnLevelSelected(const FLevelData& Data);
+
+
 
     USTUGameInstance* GetSTUGameInstance() const;
 };
