@@ -32,6 +32,7 @@ void ASTUGameModeBase::StartPlay()
     CreateTeamsInfo();
 
     CurrentRound = 1;
+    ResetPlayers();
     StartRound();
 
     SetMatchState(ESTUMatchState::InProgress);

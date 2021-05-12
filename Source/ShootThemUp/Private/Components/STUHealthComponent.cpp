@@ -9,18 +9,30 @@
 #include "STUGameModeBase.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "Perception/AISense_Damage.h"
+#include "STUGameInstance.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
 USTUHealthComponent::USTUHealthComponent()
 {
-
+     
     PrimaryComponentTick.bCanEverTick = false;
 }
 
 void USTUHealthComponent::BeginPlay()
 {
     Super::BeginPlay();
+
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    const auto NewGameData = GameInstanse->GameData;
+
+ /*   GameData.MaxHealth = 1000;
+    GameData.AutoHeal = true;
+    GameInstanse->SetMaxHealth(GameData);
+    GameInstanse->SetAutoHeal(GameData);*/
+
+    MaxHealth = NewGameData.MaxHealth;
+    AutoHeal = NewGameData.AutoHeal;
 
     check(MaxHealth > 0);
 

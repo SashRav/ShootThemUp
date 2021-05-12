@@ -54,6 +54,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
     TMap<UPhysicalMaterial*, float> DamageModifiers;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    FGameData GameData;
+
     virtual void BeginPlay() override;
 
 private:

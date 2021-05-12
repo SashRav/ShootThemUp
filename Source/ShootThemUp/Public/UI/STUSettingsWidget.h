@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "UI/STUBaseWidget.h"
 #include "STUCoreTypes.h"
+#include "Menu/UI/STUadditionalSettings.h"
 #include "STUSettingsWidget.generated.h"
 
 class UButton;
 class USpinBox;
+class UScrollBox;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUSettingsWidget : public USTUBaseWidget
@@ -31,8 +33,15 @@ protected:
     UPROPERTY(meta = (BindWidget))
     USpinBox* RoundsDuraionSpin;
 
+    UPROPERTY(meta = (BindWidget))
+    UScrollBox* AdditionalScrollBox;
+
+
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     FGameData GameData;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<UUserWidget> AdditionalSettingsWidgetClass;
 
     UFUNCTION()
     void SaveData();
@@ -43,4 +52,6 @@ protected:
     virtual void NativeOnInitialized() override;
 
 private:
+
+    USTUadditionalSettings* AdditionalSettingsWidget;
 };

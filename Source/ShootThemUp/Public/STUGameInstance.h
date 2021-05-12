@@ -33,6 +33,8 @@ public:
     void SetPlayersNumber(FGameData NewGameData) { GameData.PlayersNum = NewGameData.PlayersNum; }
     void SetRoundsNumber(FGameData NewGameData) { GameData.RoundsNum = NewGameData.RoundsNum; }
     void SetRoundsDuration(FGameData NewGameData) { GameData.RoindTime = NewGameData.RoindTime; }
+    void SetAutoHeal(FGameData NewGameData) { GameData.AutoHeal = NewGameData.AutoHeal; }
+    void SetMaxHealth(FGameData NewGameData) { GameData.MaxHealth = NewGameData.MaxHealth; }
 
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UTouchInterface* TouchInterface;

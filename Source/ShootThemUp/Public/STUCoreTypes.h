@@ -90,14 +90,14 @@ struct FGameData
 {
     GENERATED_USTRUCT_BODY()
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "1", ClampMax = "100"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
     int32 PlayersNum = 2;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "1", ClampMax = "10"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
     int32 RoundsNum = 4;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "3", ClampMax = "300"))
-    int32 RoindTime = 10; // in seconds
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+    int32 RoindTime = 30; // in seconds
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FLinearColor DefaultTeamColor = FLinearColor::Red;
@@ -105,8 +105,14 @@ struct FGameData
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     TArray<FLinearColor> TeamColors;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "3", ClampMax = "20"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
     int32 RespawnTime = 5;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
+    float MaxHealth = 100.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal")
+    bool AutoHeal = false;
 };
 
 UENUM(BlueprintType)
