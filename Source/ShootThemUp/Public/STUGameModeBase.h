@@ -7,6 +7,7 @@
 #include "STUCoreTypes.h"
 #include "STUGameModeBase.generated.h"
 
+
 class AAIController;
 
 UCLASS()
@@ -25,6 +26,7 @@ public:
     void Killed(AController* KillerController, AController* VictimController);
 
     FGameData GetGameData() const { return GameData; }
+//    void SetGameData(FGameData NewGameData) { GameData = NewGameData; }
     int32 GetCurrentRoundNum() const { return CurrentRound; }
     int32 GetRoundSecondsRemaining() const { return RoundCoundDown; }
 

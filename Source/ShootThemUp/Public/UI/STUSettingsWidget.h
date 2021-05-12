@@ -15,8 +15,6 @@ class SHOOTTHEMUP_API USTUSettingsWidget : public USTUBaseWidget
 {
     GENERATED_BODY()
 
-    FGameData GetGameData() const { return GameData; }
-
 protected:
     UPROPERTY(meta = (BindWidget))
     UButton* SaveButton;
@@ -27,20 +25,22 @@ protected:
     UPROPERTY(meta = (BindWidget))
     USpinBox* PlayersNumSpin;
 
+    UPROPERTY(meta = (BindWidget))
+    USpinBox* RoundsNumSpin;
+
+    UPROPERTY(meta = (BindWidget))
+    USpinBox* RoundsDuraionSpin;
+
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     FGameData GameData;
 
-    UFUNCTION(BlueprintCallable, Category = "UI")
-    int32 GetPlayersNumber() const { return GameData.PlayersNum; }
-
     UFUNCTION()
-    void SetPlayersNumber();
+    void SaveData();
 
-    //UFUNCTION(BlueprintCallable, Category = "UI")
-    //ESlateVisibility ReturnToMenu() const;
+    // UFUNCTION(BlueprintCallable, Category = "UI")
+    // ESlateVisibility ReturnToMenu() const;
 
     virtual void NativeOnInitialized() override;
 
 private:
-    
 };

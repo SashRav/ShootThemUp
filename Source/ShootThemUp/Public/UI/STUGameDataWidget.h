@@ -8,6 +8,7 @@
 
 class ASTUGameModeBase;
 class ASTUPlayerState;
+class USTUGameInstance;
 
 UCLASS()
 class SHOOTTHEMUP_API USTUGameDataWidget : public UUserWidget
@@ -28,4 +29,5 @@ public:
 private:
     ASTUGameModeBase* GetSTUGameMode() const;
     ASTUPlayerState* GetSTUPlayerState() const;
+    USTUGameInstance* GetSTUGameInstance() const;
 };

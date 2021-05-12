@@ -28,10 +28,20 @@ public:
 
     void SetTouchInterface(UTouchInterface* STouchInterface) { TouchInterface = STouchInterface; }
 
+    FGameData GetGameData() const { return GameData; }
+
+    void SetPlayersNumber(FGameData NewGameData) { GameData.PlayersNum = NewGameData.PlayersNum; }
+    void SetRoundsNumber(FGameData NewGameData) { GameData.RoundsNum = NewGameData.RoundsNum; }
+    void SetRoundsDuration(FGameData NewGameData) { GameData.RoindTime = NewGameData.RoindTime; }
+
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UTouchInterface* TouchInterface;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    FGameData GameData;
+
 protected:
+
     UPROPERTY(EditDefaultsOnly, Category = "Game", meta = (ToolTip = "Level names must be uniqe!"))
     TArray<FLevelData> LevelsData;
 

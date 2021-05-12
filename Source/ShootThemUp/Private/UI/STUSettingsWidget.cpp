@@ -7,30 +7,37 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Menu/UI/STUMenuWidget.h"
+#include "STUGameInstance.h"
 
 void USTUSettingsWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
-    PlayersNumSpin->Value = GameData.PlayersNum;
+     const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    const auto NewGameData = GameInstanse->GameData;
+
+    PlayersNumSpin->Value = NewGameData.PlayersNum;
+    RoundsNumSpin->Value = NewGameData.RoundsNum;
+    RoundsDuraionSpin->Value = NewGameData.RoindTime;
 
     if (SaveButton)
     {
-        SaveButton->OnClicked.AddDynamic(this, &USTUSettingsWidget::SetPlayersNumber);
+        SaveButton->OnClicked.AddDynamic(this, &USTUSettingsWidget::SaveData);
     }
-  /*  if (ReturnButton)
-    {
-        ReturnButton->OnClicked.AddDynamic(this, &USTUSettingsWidget::ReturnToMenu);
-    }*/
 }
 
-//ESlateVisibility USTUSettingsWidget::ReturnToMenu() const
-//{
-//    // this->SetVisibility(ESlateVisibility::Hidden);
-//    return ESlateVisibility::Hidden;
-//}
-
-void USTUSettingsWidget::SetPlayersNumber()
+void USTUSettingsWidget::SaveData()
 {
-    // GameData.PlayersNum = PlayersNumSlider->GetValue();
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    
+    GameData.PlayersNum =  PlayersNumSpin->GetValue();
+    GameInstanse->SetPlayersNumber(GameData);
+
+    GameData.RoundsNum = RoundsNumSpin->GetValue();
+    GameInstanse->SetRoundsNumber(GameData);
+
+    GameData.RoindTime = RoundsDuraionSpin->GetValue();
+    GameInstanse->SetRoundsDuration(GameData);
+
+    this->SetVisibility(ESlateVisibility::Hidden);
 }

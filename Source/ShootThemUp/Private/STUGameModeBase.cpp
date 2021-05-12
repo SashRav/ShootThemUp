@@ -42,6 +42,11 @@ void ASTUGameModeBase::SpawnBots()
     if (!GetWorld())
         return;
 
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    const auto NewGameData = GameInstanse->GetGameData();
+
+    GameData.PlayersNum = NewGameData.PlayersNum;
+
     for (int32 i = 0; i < GameData.PlayersNum - 1; ++i)
     {
         FActorSpawnParameters SpawnInfo;
@@ -63,12 +68,21 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
 
 void ASTUGameModeBase::StartRound()
 {
-    RoundCoundDown = GameData.RoindTime;
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    const auto NewGameData = GameInstanse->GetGameData();
+
+    RoundCoundDown = NewGameData.RoindTime;
     GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &ASTUGameModeBase::GameTimerUpdate, 1.0f, true);
 }
 void ASTUGameModeBase::GameTimerUpdate()
 {
    // UE_LOG(LogSTUGameModeBase, Display, TEXT("Time: %i / Round: %i%i "), RoundCoundDown, CurrentRound, GameData.RoundsNum);
+
+   const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+   const auto NewGameData = GameInstanse->GetGameData();
+
+   GameData.PlayersNum = NewGameData.PlayersNum;
+   GameData.RoundsNum = NewGameData.RoundsNum;
 
     if (--RoundCoundDown == 0)
     {
@@ -135,6 +149,9 @@ void ASTUGameModeBase::CreateTeamsInfo()
 }
 FLinearColor ASTUGameModeBase::DetermineColorByTeamID(int32 TeamID) const
 {
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    //const auto NewGameData = GameInstanse->GetGameData();
+
     if (TeamID - 1 < GameData.TeamColors.Num())
     {
         return GameData.TeamColors[TeamID - 1];
@@ -199,15 +216,17 @@ void ASTUGameModeBase::LogPlayerInfo()
 
 void ASTUGameModeBase::StartRespawn(AController* Controller)
 {
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    const auto NewGameData = GameInstanse->GetGameData();
 
-    const auto RespawnAvailable = RoundCoundDown > MinRoundTimeForRespawn + GameData.RespawnTime;
+    const auto RespawnAvailable = RoundCoundDown > MinRoundTimeForRespawn + NewGameData.RespawnTime;
     if (!RespawnAvailable)
         return;
     const auto RespawnComponent = STUUtils::GetSTUPlayerController<USTURespawnComponent>(Controller);
     if (!RespawnComponent)
         return;
 
-    RespawnComponent->Respawn(GameData.RespawnTime);
+    RespawnComponent->Respawn(NewGameData.RespawnTime);
 }
 
 void ASTUGameModeBase::RespawnRequest(AController* Controller)
