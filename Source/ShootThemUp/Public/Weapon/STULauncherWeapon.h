@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Weapon/STUBaseWeapon.h"
+
 #include "STULauncherWeapon.generated.h"
 
 class ASTUProjectile;

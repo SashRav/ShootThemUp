@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "STUCoreTypes.h"
+#include "Weapon/STURifleWeapon.h"
 #include "STUadditionalSettings.generated.h"
 
 class UCheckBox;
@@ -18,6 +19,7 @@ class SHOOTTHEMUP_API USTUadditionalSettings : public UUserWidget
 public:
     void SaveAdditionalData();
 
+
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     FGameData GameData;
 
@@ -26,4 +28,19 @@ public:
 
     UPROPERTY(meta = (BindWidget))
     UCheckBox* AutoHealCheckBox;
+    
+    UPROPERTY(meta = (BindWidget))
+    USpinBox* RifleAmmoSpin;
+
+    UPROPERTY(meta = (BindWidget))
+    USpinBox* RifleClipsSpin;
+
+    UPROPERTY(meta = (BindWidget))
+    UCheckBox* InfinityRifleAmmoCheckBox;
+
+    UPROPERTY(meta = (BindWidget))
+    USpinBox* LauncherAmmoSpin;
+
+    UPROPERTY(meta = (BindWidget))
+    USpinBox* LauncherClipsSpin;
 };

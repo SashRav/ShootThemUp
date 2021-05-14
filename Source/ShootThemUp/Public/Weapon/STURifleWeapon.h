@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Weapon/STUBaseWeapon.h"
+#include "STUCoreTypes.h"
 #include "STURifleWeapon.generated.h"
 
 class USTUWeaponFXComponent;

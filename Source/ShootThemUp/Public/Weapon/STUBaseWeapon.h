@@ -21,6 +21,11 @@ public:
     // Sets default values for this actor's properties
     ASTUBaseWeapon();
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+    FAmmoData DefaultAmmo{15, 10, false};
+
+    FAmmoData CurrentAmmo;
+
     FOnClipEmptySignature OnClipEmpty;
 
     virtual void StartFire();
@@ -36,9 +41,7 @@ public:
     bool IsAmmoEmpty() const;
     bool IsAmmoFull() const;
 
-    virtual void Zoom(bool Enabled) {
-
-    }
+    virtual void Zoom(bool Enabled) {}
 
 protected:
     // Called when the game starts or when spawned
@@ -52,9 +55,6 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
     float TraceMaxDistance = 1500.0f;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-    FAmmoData DefaultAmmo{15, 10, false};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FWeaponUIData UIData;
@@ -81,7 +81,5 @@ protected:
 
     UNiagaraComponent* SpawnMuzzleFX();
 
-private:
     // FTimerHandle ShotTimerHandle;
-    FAmmoData CurrentAmmo;
 };

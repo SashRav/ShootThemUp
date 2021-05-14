@@ -41,6 +41,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<FWeaponData> WeaponData;
 
+    UPROPERTY()
+    TArray<ASTUBaseWeapon*> Weapons;
+
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     FName WeaponEquipSocketName = "WeaponSocket";
 
@@ -53,10 +56,7 @@ protected:
     UPROPERTY()
     ASTUBaseWeapon* CurrentWeapon = nullptr;
 
-    UPROPERTY()
-    TArray<ASTUBaseWeapon*> Weapons;
-
-     int32 CurrentWeaponIndex = 0;
+    int32 CurrentWeaponIndex = 0;
 
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -70,7 +70,6 @@ private:
     UPROPERTY()
     UAnimMontage* CurrentReloadAnimMontage = nullptr;
 
-   
     bool EquipAnimInProgress = false;
     bool ReloadAnimInProgress = false;
 
@@ -88,4 +87,3 @@ private:
     void OnEmptyClip(ASTUBaseWeapon* AmmoEmptyWeapon);
     void ChangeClip();
 };
-

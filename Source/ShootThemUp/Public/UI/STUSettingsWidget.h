@@ -6,6 +6,7 @@
 #include "UI/STUBaseWidget.h"
 #include "STUCoreTypes.h"
 #include "Menu/UI/STUadditionalSettings.h"
+#include "Weapon/STURifleWeapon.h"
 #include "STUSettingsWidget.generated.h"
 
 class UButton;
@@ -36,12 +37,20 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UScrollBox* AdditionalScrollBox;
 
-
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     FGameData GameData;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     TSubclassOf<UUserWidget> AdditionalSettingsWidgetClass;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<ASTURifleWeapon> RifleWeapon;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    FRifleAmmoData RifleAmmoData;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    FLauncherAmmoData LaunchAmmoData;
 
     UFUNCTION()
     void SaveData();
@@ -52,6 +61,5 @@ protected:
     virtual void NativeOnInitialized() override;
 
 private:
-
     USTUadditionalSettings* AdditionalSettingsWidget;
 };

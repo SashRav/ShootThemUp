@@ -7,6 +7,9 @@
 #include "GameFramework/Controller.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "STUGameInstance.h"
+#include "Weapon/STURifleWeapon.h"
+#include "Weapon/STULauncherWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
@@ -23,10 +26,30 @@ void ASTUBaseWeapon::BeginPlay()
 {
     Super::BeginPlay();
 
+    const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
+    const auto NewRifleAmmo = GameInstanse->GetRifleAmmoData();
+    const auto NewLauncherAmmo = GameInstanse->GetLauncherAmmoData();
+
+    const auto ChildIsRifle = Cast<ASTURifleWeapon>(this);
+    const auto ChildIsLauncher = Cast<ASTULauncherWeapon>(this);
+
+    CurrentAmmo = DefaultAmmo;
+
+    if (ChildIsRifle)
+    {
+        CurrentAmmo.Bullets = NewRifleAmmo.Bullets;
+        CurrentAmmo.Clips = NewRifleAmmo.Clips;
+        CurrentAmmo.Infinite = NewRifleAmmo.Infinite;
+    }
+    if (ChildIsLauncher)
+    {
+        CurrentAmmo.Bullets = NewLauncherAmmo.Bullets;
+        CurrentAmmo.Clips = NewLauncherAmmo.Clips;
+    }
+    
     check(WeaponMesh);
     checkf(DefaultAmmo.Bullets > 0, TEXT("Bullets count couldn't be less or equal zero"));
     checkf(DefaultAmmo.Clips > 0, TEXT("Clips count couldn't be less or equal zero"));
-    CurrentAmmo = DefaultAmmo;
 }
 
 void ASTUBaseWeapon::StartFire() {}
@@ -34,8 +57,6 @@ void ASTUBaseWeapon::StartFire() {}
 void ASTUBaseWeapon::StopFire() {}
 
 void ASTUBaseWeapon::MakeShot() {}
-
-
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
@@ -124,7 +145,7 @@ void ASTUBaseWeapon::ChangeClip()
         CurrentAmmo.Clips--;
     }
     CurrentAmmo.Bullets = DefaultAmmo.Bullets;
- //   UE_LOG(LogBaseWeapon, Display, TEXT("=-----   Change Clip  -------="));
+    //   UE_LOG(LogBaseWeapon, Display, TEXT("=-----   Change Clip  -------="));
 }
 
 bool ASTUBaseWeapon::CanReload() const
@@ -136,7 +157,7 @@ void ASTUBaseWeapon::LogAmmo()
 {
     FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
     AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
-//    UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
+    //    UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
 }
 
 bool ASTUBaseWeapon::IsAmmoFull() const

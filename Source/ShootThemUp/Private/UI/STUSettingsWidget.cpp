@@ -8,17 +8,21 @@
 #include "STUCoreTypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Menu/UI/STUMenuWidget.h"
 #include "STUGameInstance.h"
+#include "Menu/UI/STUMenuWidget.h"
 #include "Menu/UI/STUadditionalSettings.h"
+#include "Weapon/STURifleWeapon.h"
 
 void USTUSettingsWidget::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
 
+    const auto AdditionalSettingsWidgetCrated = CreateWidget<USTUadditionalSettings>(GetWorld(), AdditionalSettingsWidgetClass);
+
     const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
     const auto NewGameData = GameInstanse->GameData;
-    const auto AdditionalSettingsWidgetCrated = CreateWidget<USTUadditionalSettings>(GetWorld(), AdditionalSettingsWidgetClass);
+    const auto NewRifleAmmoData = GameInstanse->GetRifleAmmoData();
+    const auto NewLauncherAmmoData = GameInstanse->GetLauncherAmmoData();
 
     PlayersNumSpin->Value = NewGameData.PlayersNum;
     RoundsNumSpin->Value = NewGameData.RoundsNum;
@@ -29,6 +33,13 @@ void USTUSettingsWidget::NativeOnInitialized()
     
     AdditionalSettingsWidget->AutoHealCheckBox->SetIsChecked(NewGameData.AutoHeal);
     AdditionalSettingsWidget->PlayersHealthSpin->Value = NewGameData.MaxHealth;
+
+    AdditionalSettingsWidget->RifleAmmoSpin->Value = NewRifleAmmoData.Bullets;
+    AdditionalSettingsWidget->RifleClipsSpin->Value = NewRifleAmmoData.Clips;
+    AdditionalSettingsWidget->InfinityRifleAmmoCheckBox->SetIsChecked(NewRifleAmmoData.Infinite);
+
+    AdditionalSettingsWidget->LauncherAmmoSpin->Value = NewLauncherAmmoData.Bullets;
+    AdditionalSettingsWidget->LauncherClipsSpin->Value = NewLauncherAmmoData.Clips;
 
     if (SaveButton)
     {
@@ -55,6 +66,21 @@ void USTUSettingsWidget::SaveData()
 
     GameData.AutoHeal = AdditionalSettingsWidget->AutoHealCheckBox->IsChecked();
     GameInstanse->SetAutoHeal(GameData);
+
+    RifleAmmoData.Bullets = AdditionalSettingsWidget->RifleAmmoSpin->GetValue();
+    GameInstanse->SetRifleAmmo(RifleAmmoData);
+
+    RifleAmmoData.Clips = AdditionalSettingsWidget->RifleClipsSpin->GetValue();
+    GameInstanse->SetRifleClips(RifleAmmoData);
+
+    RifleAmmoData.Infinite = AdditionalSettingsWidget->InfinityRifleAmmoCheckBox->IsChecked();
+    GameInstanse->SetInfinityAmmo(RifleAmmoData);
+
+    LaunchAmmoData.Bullets = AdditionalSettingsWidget->LauncherAmmoSpin->GetValue();
+    GameInstanse->SetLauncherAmmo(LaunchAmmoData);
+
+    LaunchAmmoData.Clips = AdditionalSettingsWidget->LauncherClipsSpin->GetValue();
+    GameInstanse->SetLauncherClips(LaunchAmmoData);
 
     this->SetVisibility(ESlateVisibility::Hidden);
 }

@@ -5,12 +5,15 @@
 #include "STUGameInstance.h"
 #include "Components/SpinBox.h"
 #include "Components/CheckBox.h"
+#include "Weapon/STURifleWeapon.h"
+#include "Weapon/STUBaseWeapon.h"
 
 
 void USTUadditionalSettings::SaveAdditionalData() {
 
     const auto GameInstanse = Cast<USTUGameInstance>(GetWorld()->GetGameInstance());
-    
+
+
     GameData.MaxHealth = PlayersHealthSpin->GetValue();
     GameInstanse->SetMaxHealth(GameData);
 

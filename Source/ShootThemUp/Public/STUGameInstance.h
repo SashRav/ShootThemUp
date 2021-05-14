@@ -36,6 +36,23 @@ public:
     void SetAutoHeal(FGameData NewGameData) { GameData.AutoHeal = NewGameData.AutoHeal; }
     void SetMaxHealth(FGameData NewGameData) { GameData.MaxHealth = NewGameData.MaxHealth; }
 
+    FRifleAmmoData GetRifleAmmoData() const { return RifleAmmoData; }
+
+    void SetRifleAmmo(FRifleAmmoData NewRifleAmmoData) { RifleAmmoData.Bullets = NewRifleAmmoData.Bullets; }
+    void SetRifleClips(FRifleAmmoData NewRifleAmmoData) { RifleAmmoData.Clips = NewRifleAmmoData.Clips; }
+    void SetInfinityAmmo(FRifleAmmoData NewRifleAmmoData) { RifleAmmoData.Infinite = NewRifleAmmoData.Infinite; }
+
+    FLauncherAmmoData GetLauncherAmmoData() const { return LauncherAmmoData; }
+
+    void SetLauncherAmmo(FLauncherAmmoData NewLauncherAmmoData) { LauncherAmmoData.Bullets = NewLauncherAmmoData.Bullets; }
+    void SetLauncherClips(FLauncherAmmoData NewLauncherAmmoData) { LauncherAmmoData.Clips = NewLauncherAmmoData.Clips; }
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    FRifleAmmoData RifleAmmoData;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Game")
+    FLauncherAmmoData LauncherAmmoData;
+
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UTouchInterface* TouchInterface;
 
